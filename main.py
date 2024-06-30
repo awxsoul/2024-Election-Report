@@ -1,6 +1,7 @@
 # The libraries used here are requests, beautifulsoup4 and pandas
 import time
 import requests
+import pandas as pd
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
@@ -20,6 +21,9 @@ pc_soup = BeautifulSoup(pc_response.text, 'html.parser')
 #use of selenium driver to navigate and find info
 driver = webdriver.Chrome('./chromedriver.exe')
 
+#dataframe
+df = pd.DataFrame(columns=["State","Constituency","Candidate","Party","EVM_votes","Postal_votes","total_votes","percentage_of_votes"])
+print(df)
 #get all the state lists from dropdown menu
 pc_links=[]
 for state in (pc_soup.find_all('option')):
@@ -61,11 +65,34 @@ for state_index in range(0,len(pc_links)):
         ta_response = requests.get(ta_url)
         ta_soup = BeautifulSoup(ta_response.text, 'html.parser')
 
+        #table found
         table=ta_soup.find('table')
-        print(table.get('class'))
-
         
+        #parse through table
+        for row in table.tbody.find_all('tr'):
+            row_data=row.find_all('td')
+            
+            sta=pc_links[state_index][0]
+            con=pc_links[state_index][2][constituency_index]
+            can=row_data[1].text.strip()
+            par=row_data[2].text.strip()
+            ev=row_data[3].text.strip()
+            po=row_data[4].text.strip()
+            to=row_data[5].text.strip()
+            pe=row_data[6].text.strip()
+            df_add = pd.DataFrame({
+                "State":[sta],
+                "Constituency":[con],
+                "Candidate":[can],
+                "Party":[par],
+                "EVM_votes":[ev],
+                "Postal_votes":[po],
+                "total_votes":[to],
+                "percentage_of_votes":[pe]
+                })
+            df = pd.concat([df, df_add], ignore_index=False)    
 
+        print(df)
         print(pc_links[state_index][0],pc_links[state_index][2][constituency_index],"fine")
    
 
