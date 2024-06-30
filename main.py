@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
 
 #main base page
 url='https://results.eci.gov.in'
@@ -42,16 +43,28 @@ for state_index in range(0,len(pc_links)):
     pc_links[state_index].append([])
     for constituency in (st_soup.find_all('option')):
          c_name=' '.join(map(str,constituency.text.split()))
-         print(c_name)
+         # this is to ensure that all the text labels have equal spacing
          pc_links[state_index][2].append(c_name)
     pc_links[state_index][2].pop(0)
-    print(pc_links[state_index][2])
     
     #to navigate driver to constituency pages
     for constituency_index in range(0,len(pc_links[state_index][2])):
         driver.get(st_url)
         select= Select(driver.find_element('name','state')) #locate the dropdown menu
         select.select_by_visible_text(pc_links[state_index][2][constituency_index]) #selecting options
+
+        #open table format page
+        driver.find_element(By.XPATH,'(//div[@class="switch-list"]//a)[2]').click()
+
+        #soup of state table info pages
+        ta_url=driver.current_url
+        ta_response = requests.get(ta_url)
+        ta_soup = BeautifulSoup(ta_response.text, 'html.parser')
+
+        table=ta_soup.find('table')
+        print(table.get('class'))
+
+        
 
         print(pc_links[state_index][0],pc_links[state_index][2][constituency_index],"fine")
    
