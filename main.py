@@ -92,10 +92,6 @@ for state_index in range(0,len(pc_links)):
                 })
             df = pd.concat([df, df_add], ignore_index=False)    
 
-        print(df)
-        print(pc_links[state_index][0],pc_links[state_index][2][constituency_index],"fine")
-   
-
 print(pc_links)
 
 driver.close()
