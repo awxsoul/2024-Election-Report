@@ -1,5 +1,5 @@
 # 2024-Election-Report
- Extraction of election results and generating a comprehensive report on it 
+This project focuses on the automated extraction of election results from [the source](https://results.eci.gov.in) and the generation of detailed reports. Utilizing web scraping techniques and data processing tools, it collects raw election data, processes it to ensure accuracy and completeness, and then generates comprehensive reports. These reports offer insightful analysis, visualizations, and comparisons, providing a clear and thorough understanding of the election outcomes.
 
  This is a partially achieved project, based on the task assigned by Kalvium as a part of their recruitment process. 
 
